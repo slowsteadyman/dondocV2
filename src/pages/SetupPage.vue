@@ -1,10 +1,10 @@
 <script setup>
-import { ref, reactive } from 'vue'
-import { useRouter } from 'vue-router'
-import { useAuthStore } from '../stores/useAuthStore.js'
+import { ref, reactive } from "vue";
+import { useRouter } from "vue-router";
+import { useAuthStore } from "../stores/useAuthStore.js";
 
-const router = useRouter()
-const authStore = useAuthStore()
+const router = useRouter();
+const authStore = useAuthStore();
 
 const form = reactive({
   age: null,
@@ -12,39 +12,40 @@ const form = reactive({
   targetExpenseRatio: 60,
 });
 
-const errorMsg = ref('');
+const errorMsg = ref("");
 const loading = ref(false);
 
 async function handleSetup() {
-  errorMsg.value = '';
+  errorMsg.value = "";
 
   if (form.age > 130 || form.age < 0) {
-    errorMsg.value = '올바른 나이를 입력해주세요';
+    errorMsg.value = "올바른 나이를 입력해주세요";
     return;
   }
 
   if (form.monthlyIncome < 0 || form.monthlyIncome > 1000000000) {
-    errorMsg.value = '올바른 월 수입을 입력해주세요';
+    errorMsg.value = "올바른 월 수입을 입력해주세요";
     return;
   }
 
   if (form.age === null || form.monthlyIncome === null) {
-    errorMsg.value = '나이와 월 수입을 입력해주세요';
+    errorMsg.value = "나이와 월 수입을 입력해주세요";
     return;
   }
 
   try {
     loading.value = true;
     await authStore.updateProfile({
+      name: "",
       age: Number(form.age),
       monthlyIncome: Number(form.monthlyIncome),
-      targetExpenseRatio: Number(form.targetExpenseRatio)
-    })
-    alert('설정이 완료되었습니다!')
+      targetExpenseRatio: Number(form.targetExpenseRatio),
+    });
+    alert("설정이 완료되었습니다!");
     // 설정 완료 후 가이드 페이지로 이동
-    router.push({ name: 'Guide', query: { source: 'login' } });
+    router.push({ name: "Guide", query: { source: "login" } });
   } catch (e) {
-    errorMsg.value = '설정 저장 중 오류가 발생했습니다';
+    errorMsg.value = "설정 저장 중 오류가 발생했습니다";
   } finally {
     loading.value = false;
   }
